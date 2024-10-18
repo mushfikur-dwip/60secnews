@@ -100,7 +100,6 @@ function NewsCard({ selectedSource }) {
                     {currentNews.content ? currentNews.content.slice(0, 200) + "..." : currentNews.description}
                 </p>
             </div>
-
             {/* Interaction Icons */}
             <div className="flex justify-around fixed bottom-0 w-full sm:w-1/3 pt-3 pb-2">
                 <img src="https://newssitedesign.com/updatenews/wp-content/uploads/2021/12/biggapon-1.gif" alt="ads" />

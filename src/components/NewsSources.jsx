@@ -7,24 +7,31 @@ const SOURCES_URL = "https://newsapi.org/v2/top-headlines/sources";
 function NewsSources({ onSourceSelect }) {
     const [sources, setSources] = useState([]);
     const [selectedSource, setSelectedSource] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     // Fetch sources based on category, language, and country
     useEffect(() => {
         async function fetchSources() {
+            setLoading(true);
+            setError(null); // Reset error state
             try {
                 const response = await axios.get(SOURCES_URL, {
                     params: {
-                        category: "technology",  // Example: sports news
-                        language: "en",  // Example: English language
-                        country: "",  // Example: US-based news
+                        category: "technology", // Example: technology news
+                        language: "en",         // Example: English language
+                        country: "",            // Example: US-based news
                     },
                     headers: {
                         "X-Api-Key": API_KEY,
                     },
                 });
-                setSources(response.data.sources);  // Store the fetched sources
+                setSources(response.data.sources); // Store the fetched sources
             } catch (error) {
+                setError("Error fetching sources. Please try again later.");
                 console.error("Error fetching sources:", error);
+            } finally {
+                setLoading(false); // Set loading to false after request
             }
         }
 
@@ -33,12 +40,13 @@ function NewsSources({ onSourceSelect }) {
 
     const handleSourceChange = (source) => {
         setSelectedSource(source);
-        onSourceSelect(source);  // Pass selected source to parent component
+        onSourceSelect(source); // Pass selected source to parent component
     };
 
     return (
         <div className="bg-gray-900 p-4">
-            {/* <h2 className="text-white text-xl font-semibold mb-2 text-center">Select a News Source:</h2> */}
+            {loading && <p className="text-white text-center">Loading sources...</p>}
+            {error && <p className="text-red-500 text-center">{error}</p>}
             <div className="overflow-x-auto hide-scrollbar whitespace-nowrap">
                 {sources.length > 0 ? (
                     sources.map((source) => (
@@ -49,12 +57,13 @@ function NewsSources({ onSourceSelect }) {
                                     ? "bg-blue-600"
                                     : "bg-gray-800 hover:bg-gray-700"
                                 }`}
+                            aria-label={`Select ${source.name} as news source`}
                         >
                             {source.name}
                         </button>
                     ))
                 ) : (
-                    <p className="text-white">Loading sources...</p>
+                    !loading && <p className="text-white text-center">No sources available.</p>
                 )}
             </div>
         </div>
