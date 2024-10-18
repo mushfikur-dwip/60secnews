@@ -14,9 +14,9 @@ function NewsSources({ onSourceSelect }) {
             try {
                 const response = await axios.get(SOURCES_URL, {
                     params: {
-                        category: "sports",  // Example: sports news
+                        category: "technology",  // Example: sports news
                         language: "en",  // Example: English language
-                        country: "us",  // Example: US-based news
+                        country: "",  // Example: US-based news
                     },
                     headers: {
                         "X-Api-Key": API_KEY,
